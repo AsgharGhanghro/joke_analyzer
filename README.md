@@ -10,8 +10,8 @@
 
 > **An AI-powered joke generator** that uses Natural Language Processing (NLP) to analyze and serve jokes from a curated dataset. Built with a Python backend and a clean web frontend, deployed on Vercel.
 
-**🌐 Live Demo:** [joke.vercel.app](https://joke-liart.vercel.app/)  
-**📁 GitHub Repo:** [github.com/asgharghanghro/Joke](https://github.com/AsgharGhanghro/Joke)
+**🌐 Live Demo:** [joke.vercel.app](https://joke-analyzer.vercel.app/)  
+**📁 GitHub Repo:** [github.com/asgharghanghro/Joke](https://github.com/AsgharGhanghro/joke_analyzer)
 
 ---
 
