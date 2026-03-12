@@ -26,7 +26,7 @@
 - [Deployment](#-deployment)
 - [Contributing](#-contributing)
 - [License](#-license)
-- [Author](#-author)
+- [Creators](#-creators)
 
 ---
 
