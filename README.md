@@ -252,13 +252,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 
-## 👤 Creators
+## 👥 Creators
 
 **Asghar Ghanghro & Neha Khattri** 
 
 - 🐙 GitHub: [@asgharghanghro](https://github.com/asgharghanghro)
-- 📧 Email: asgharghanghro@gmail.com
-- 🔗 Project: [github.com/asgharghanghro/Joke](https://github.com/asgharghanghro/Joke)
+- 📧 Email: aliasghargh540@gmail.com
+- 🔗 Project: [github.com/asgharghanghro/Joke-Analyzer](https://github.com/AsgharGhanghro/joke_analyzer)
 
 ---
 
