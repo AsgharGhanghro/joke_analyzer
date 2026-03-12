@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🤖 JokeBot — AI Joke Evaluator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Syne:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+ 
+</head>
+
+<body>
+
+    <div id="robotWelcomeScreen" title="Click to start!">
+        <div class="welcome-scanlines"></div>
+
+        <!-- Particle sparks -->
+        <div class="spark" style="left:12%;top:20%;--tx:-60px;--ty:-100px;--dur:4s;--delay:0s;background:#ff3cac;"></div>
+        <div class="spark" style="left:85%;top:15%;--tx:50px;--ty:-90px;--dur:3.5s;--delay:.8s;"></div>
+        <div class="spark" style="left:8%;top:65%;--tx:-40px;--ty:60px;--dur:4.5s;--delay:.3s;background:#10b981;"></div>
+        <div class="spark" style="left:90%;top:70%;--tx:45px;--ty:70px;--dur:3.8s;--delay:1.2s;background:#ff3cac;"></div>
+        <div class="spark" style="left:50%;top:8%;--tx:20px;--ty:-80px;--dur:5s;--delay:.5s;"></div>
+        <div class="spark" style="left:30%;top:88%;--tx:-30px;--ty:60px;--dur:4.2s;--delay:1.5s;background:#f59e0b;"></div>
+        <div class="spark" style="left:72%;top:85%;--tx:50px;--ty:50px;--dur:3.6s;--delay:.2s;"></div>
+
+        <div class="welcome-content">
+            <!-- ROBOT -->
+            <div class="welcome-robot-wrap">
+                <div class="welcome-robot">
+                    <div class="w-robot-head">
+                        <div class="w-robot-face">
+                            <div class="w-robot-eyes">
+                                <div class="w-robot-eye"></div>
+                                <div class="w-robot-eye"></div>
+                            </div>
+                            <div class="w-robot-mouth"></div>
+                        </div>
+                    </div>
+                    <div class="w-robot-neck"></div>
+                    <div class="w-robot-body">
+                        <div class="w-robot-chest">
+                            <div class="w-robot-core"></div>
+                            <div class="w-robot-leds">
+                                <div class="w-led"></div>
+                                <div class="w-led"></div>
+                                <div class="w-led"></div>
+                                <div class="w-led"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-robot-legs">
+                        <div class="w-robot-leg"></div>
+                        <div class="w-robot-leg"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SPEECH BUBBLE -->
+            <div class="welcome-speech-bubble">
+                <div class="bubble-text" id="bubbleText"><span class="bubble-cursor" id="bubbleCursor"></span></div>
+                <div class="bubble-sub" id="bubbleSub">[ click me to begin ]</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainApp" style="display:none; width:100%; min-height:100vh; align-items:center; justify-content:center; padding:20px;">
+
+        <div class="app-container">
+            <div class="page-title">
+                <h1>🤖 JokeBot AI</h1>
+                <p>Tell me a joke — I'll rate it honestly</p>
+            </div>
+
+            <div class="battery-header">
+                <div class="battery-top">
+                    <div class="battery-info">
+                        <i class="fas fa-bolt"></i>
+                        <div class="battery-text">
+                            <span class="battery-label">Robot Battery</span>
+                            <span class="battery-percent" id="batteryPercent">100%</span>
+                        </div>
+                    </div>
+                    <div class="battery-status" id="batteryStatus">Ready for jokes!</div>
+                </div>
+                <div class="battery-bar">
+                    <div class="battery-fill" id="batteryFill"></div>
+                </div>
+            </div>
+
+            <div class="main-app">
+                <div class="bot-response-area">
+                    <div class="bot-avatar">🤖</div>
+                    <div class="response-container">
+                        <div class="response-text" id="responseText">Hello! Tell me a joke and I'll give you my honest
+                            reaction!</div>
+                        <div class="response-controls">
+                            <button id="speakBtn" class="speak-btn" disabled><i class="fas fa-volume-up"></i> Speak</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-header">
+                        <h3><i class="fas fa-microphone-alt"></i> Your Joke</h3>
+                        <div class="input-tabs">
+                            <button class="tab-btn active" id="textTab"><i class="fas fa-keyboard"></i> Text</button>
+                            <button class="tab-btn" id="voiceTab"><i class="fas fa-microphone"></i> Voice</button>
+                        </div>
+                    </div>
+
+                    <div class="input-section active" id="textSection">
+                        <textarea id="jokeInput"
+                            placeholder="Why don't scientists trust atoms? Because they make up everything! 😄"
+                            rows="3"></textarea>
+                        <div class="input-footer">
+                            <span class="char-count" id="charCount">0 chars</span>
+                            <button id="evaluateBtn" class="evaluate-btn"><i class="fas fa-brain"></i> Evaluate
+                                Joke</button>
+                        </div>
+                    </div>
+
+                    <div class="input-section" id="voiceSection">
+                        <div class="voice-recorder">
+                            <div class="voice-display">
+                                <div class="mic-icon" id="micIcon"><i class="fas fa-microphone"></i></div>
+                                <div class="voice-bars">
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                </div>
+                            </div>
+                            <button id="recordBtn" class="record-btn"><i class="fas fa-microphone"></i> Start
+                                Recording</button>
+                            <div class="voice-status" id="voiceStatus">Press button to record your joke</div>
+                        </div>
+                        <div class="transcript-box">
+                            <div class="transcript-text" id="transcriptText">Your spoken joke will appear here...</div>
+                            <button id="useTranscriptBtn" class="use-btn" disabled>Use This Joke</button>
+                        </div>
+                    </div>
+
+                    <div class="examples-box">
+                        <p class="examples-label">Try these:</p>
+                        <div class="example-buttons">
+                            <button class="example-btn"
+                                data-joke="Why don't skeletons fight each other? They don't have the guts.">💀
+                                Skeleton</button>
+                            <button class="example-btn" data-joke="What do you call a fake noodle? An impasta!">🍝
+                                Impasta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-footer">
+                <div class="footer-left"><span class="status"><i class="fas fa-circle status-online"></i> AI Online</span>
+                </div>
+                <div class="footer-right">
+                    <button id="resetBtn" class="footer-btn"><i class="fas fa-redo"></i> Reset</button>
+                    <button id="helpBtn" class="footer-btn"><i class="fas fa-question-circle"></i> Help</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="evaluationModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-robot"></i> JokeBot says...</h2>
+                    <button class="modal-close" id="closeModalBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="robot-wrap">
+                        <div class="robot" id="cssRobot">
+                            <div class="robot-head">
+                                <div class="robot-face">
+                                    <div class="robot-eyes">
+                                        <div class="robot-eye"></div>
+                                        <div class="robot-eye"></div>
+                                    </div>
+                                    <div class="robot-mouth" id="robotMouth"></div>
+                                </div>
+                            </div>
+                            <div class="robot-neck"></div>
+                            <div class="robot-body">
+                                <div class="robot-chest">
+                                    <div class="robot-core"></div>
+                                    <div class="robot-leds">
+                                        <div class="led"></div>
+                                        <div class="led"></div>
+                                        <div class="led"></div>
+                                        <div class="led"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="robot-legs">
+                                <div class="robot-leg"></div>
+                                <div class="robot-leg"></div>
+                            </div>
+                        </div>
+                        <div class="robot-score-badge" id="robotScoreBadge"></div>
+                    </div>
+                    <div id="modalResult" class="modal-result"></div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modalSpeakBtn" class="speak-btn"><i class="fas fa-volume-up"></i> Speak Response</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="chatbot-toggle" id="chatbotToggle"><i class="fas fa-comment"></i></button>
+        <div class="chatbot-container" id="chatbotContainer">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <div class="chatbot-avatar"><i class="fas fa-robot"></i></div>
+                    <h3>JokeAI Assistant</h3>
+                </div>
+                <div class="chatbot-actions">
+                    <button class="chatbot-btn" id="chatbotRefreshBtn" title="Clear chat"><i
+                            class="fas fa-redo-alt"></i></button>
+                    <button class="chatbot-btn" id="chatbotCloseBtn" title="Close"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="quick-questions" id="quickQuestions">
+                <div class="quick-questions-title">Quick questions:</div>
+                <div class="quick-questions-grid">
+                    <button class="quick-question-btn" data-question="How does scoring work?">🎯 Scoring</button>
+                    <button class="quick-question-btn" data-question="Who created this?">👥 Creators</button>
+                    <button class="quick-question-btn" data-question="Explain battery system">⚡ Battery</button>
+                    <button class="quick-question-btn" data-question="Voice features">🎤 Voice</button>
+                </div>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages"></div>
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div class="chatbot-input-area">
+                <input type="text" class="chatbot-input" id="chatbotInput"
+                    placeholder="Ask about jokes, scoring, or creators..." autocomplete="off" />
+                <button class="chatbot-send" id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+    </div><!-- /#mainApp -->
+
+    <script>
+        (function () {
+            const screen   = document.getElementById('robotWelcomeScreen');
+            const mainApp  = document.getElementById('mainApp');
+            const bubbleText = document.getElementById('bubbleText');
+            const bubbleCursor = document.getElementById('bubbleCursor');
+            const bubbleSub  = document.getElementById('bubbleSub');
+
+            // ── Typewriter effect ─────────────────────────────────────
+            const MESSAGE = "My battery runs on humor. \nTell me a joke!";
+            let typewriterDone = false;
+
+            async function typeWriter() {
+                // Wait for bubble animation to finish (1s delay + ~0.7s anim)
+                await new Promise(r => setTimeout(r, 1400));
+
+                for (let i = 0; i < MESSAGE.length; i++) {
+                    const ch = MESSAGE[i];
+                    if (ch === '\n') {
+                        bubbleCursor.insertAdjacentHTML('beforebegin', '<br>');
+                    } else {
+                        const span = document.createElement('span');
+                        span.textContent = ch;
+                        span.style.cssText = `
+                            display:inline;
+                            background:linear-gradient(135deg,#00e5ff,#ff3cac);
+                            -webkit-background-clip:text;
+                            -webkit-text-fill-color:transparent;
+                            background-clip:text;
+                            font-family:'Orbitron',monospace;
+                            font-size:.95rem;
+                            font-weight:700;
+                            letter-spacing:.06em;
+                        `;
+                        bubbleCursor.insertAdjacentElement('beforebegin', span);
+                    }
+
+                    // Delay: longer on punctuation, shorter on normal chars
+                    const delay = ['.', '!', '?', ',', '—'].includes(ch) ? 120 : ch === '\n' ? 200 : 55;
+                    await new Promise(r => setTimeout(r, delay));
+                }
+
+                // Hide cursor, show "click" hint
+                bubbleCursor.classList.add('hidden');
+                bubbleSub.classList.add('visible');
+                typewriterDone = true;
+            }
+
+            typeWriter();
+
+            // ── Click to launch ───────────────────────────────────────
+            function launchApp(e) {
+                // Ripple
+                const ripple = document.createElement('div');
+                ripple.className = 'click-ripple';
+                ripple.style.left = (e.clientX - 5) + 'px';
+                ripple.style.top  = (e.clientY - 5) + 'px';
+                screen.appendChild(ripple);
+
+                screen.classList.add('exiting');
+
+                setTimeout(() => {
+                    screen.style.display = 'none';
+                    mainApp.style.display = 'flex';
+                    document.dispatchEvent(new Event('appReady'));
+                }, 650);
+            }
+
+            screen.addEventListener('click', launchApp);
+
+            document.addEventListener('keydown', (e) => {
+                if (screen.style.display !== 'none' && (e.key === 'Enter' || e.key === ' ')) {
+                    launchApp({ clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 });
+                }
+            });
+        })();
+    </script>
+
+
+    <!-- ============================================================
+         MAIN JOKEBOT LOGIC (unchanged from your original)
+    ============================================================ -->
+    <script>
+        class JokeBot {
+            constructor() {
+                this.batteryLevel = 100;
+                this.isRecording = false;
+                this.mediaRecorder = null;
+                this.audioChunks = [];
+                this.barInterval = null;
+                this.currentJoke = '';
+                this.currentResponse = '';
+                this.speechSynth = window.speechSynthesis;
+                // Wait for app to be revealed before init
+                document.addEventListener('appReady', () => this.init());
+            }
+
+            async init() {
+                this.loadBattery();
+                this.cacheDOM();
+                this.setupEventListeners();
+                this.updateBatteryDisplay();
+            }
+
+            cacheDOM() {
+                this.batteryPercent = document.getElementById('batteryPercent');
+                this.batteryFill = document.getElementById('batteryFill');
+                this.batteryStatus = document.getElementById('batteryStatus');
+                this.responseText = document.getElementById('responseText');
+                this.speakBtn = document.getElementById('speakBtn');
+                this.jokeInput = document.getElementById('jokeInput');
+                this.evaluateBtn = document.getElementById('evaluateBtn');
+                this.charCount = document.getElementById('charCount');
+                this.textTab = document.getElementById('textTab');
+                this.voiceTab = document.getElementById('voiceTab');
+                this.textSection = document.getElementById('textSection');
+                this.voiceSection = document.getElementById('voiceSection');
+                this.recordBtn = document.getElementById('recordBtn');
+                this.voiceStatus = document.getElementById('voiceStatus');
+                this.transcriptText = document.getElementById('transcriptText');
+                this.useTranscriptBtn = document.getElementById('useTranscriptBtn');
+                this.exampleBtns = document.querySelectorAll('.example-btn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.helpBtn = document.getElementById('helpBtn');
+                this.modal = document.getElementById('evaluationModal');
+                this.modalResult = document.getElementById('modalResult');
+                this.closeModalBtn = document.getElementById('closeModalBtn');
+                this.modalSpeakBtn = document.getElementById('modalSpeakBtn');
+                this.robotMouth = document.getElementById('robotMouth');
+                this.robotScoreBadge = document.getElementById('robotScoreBadge');
+            }
+
+            setupEventListeners() {
+                this.jokeInput.addEventListener('input', () => this.updateCharCount());
+                this.evaluateBtn.addEventListener('click', () => this.evaluateJoke());
+                this.textTab.addEventListener('click', () => this.switchTab('text'));
+                this.voiceTab.addEventListener('click', () => this.switchTab('voice'));
+                this.recordBtn.addEventListener('click', () => this.toggleRecording());
+                this.useTranscriptBtn.addEventListener('click', () => this.useTranscript());
+                this.exampleBtns.forEach(b => b.addEventListener('click', e => {
+                    this.jokeInput.value = e.currentTarget.getAttribute('data-joke');
+                    this.switchTab('text'); this.updateCharCount(); this.showNotification('Example loaded!');
+                }));
+                this.resetBtn.addEventListener('click', () => this.resetBattery());
+                this.helpBtn.addEventListener('click', () => this.showHelp());
+                this.speakBtn.addEventListener('click', () => this.speakResponse());
+                document.addEventListener('keydown', e => { if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); this.evaluateJoke(); } });
+                this.closeModalBtn.addEventListener('click', () => this.modal.classList.remove('active'));
+                this.modalSpeakBtn.addEventListener('click', () => this.speakResponseWithMouth(this.robotMouth));
+                window.addEventListener('click', e => { if (e.target === this.modal) this.modal.classList.remove('active'); });
+            }
+
+            toggleRecording() {
+                if (!this.isRecording) { this.startVoiceRecording(); } else { this.stopVoiceRecording(); }
+            }
+
+            async startVoiceRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+                    let mimeType = 'audio/webm';
+                    if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) mimeType = 'audio/webm;codecs=opus';
+                    else if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4';
+                    else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) mimeType = 'audio/ogg;codecs=opus';
+                    this.mediaRecorder = new MediaRecorder(stream, { mimeType });
+                    this.audioChunks = [];
+                    this.mediaRecorder.ondataavailable = (event) => { if (event.data.size > 0) this.audioChunks.push(event.data); };
+                    this.mediaRecorder.onstop = async () => {
+                        this.voiceStatus.textContent = '⏳ Sending to Gemini...';
+                        this.transcriptText.textContent = 'Transcribing your joke...';
+                        const audioBlob = new Blob(this.audioChunks, { type: mimeType });
+                        await this.transcribeWithGemini(audioBlob, mimeType);
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+                    this.mediaRecorder.start();
+                    this.isRecording = true;
+                    this.recordBtn.classList.add('recording');
+                    this.recordBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Recording';
+                    this.voiceStatus.textContent = '🎤 Listening... Speak your joke!';
+                    this.transcriptText.textContent = '';
+                    this.useTranscriptBtn.disabled = true;
+                    this.animateVoiceBars(true);
+                } catch (err) {
+                    this.showNotification('❌ Microphone error: ' + err.message);
+                    this.voiceStatus.textContent = 'Error: Microphone access needed.';
+                }
+            }
+
+            stopVoiceRecording() {
+                if (this.mediaRecorder && this.isRecording) {
+                    this.mediaRecorder.stop();
+                    this.isRecording = false;
+                    this.recordBtn.classList.remove('recording');
+                    this.recordBtn.innerHTML = '<i class="fas fa-microphone"></i> Record Joke';
+                    this.animateVoiceBars(false);
+                }
+            }
+
+            async transcribeWithGemini(audioBlob, mimeType) {
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'recording');
+                formData.append('mimeType', mimeType);
+                try {
+                    const response = await fetch('http://127.0.0.1:5000/transcribe', { method: 'POST', body: formData });
+                    const data = await response.json();
+                    if (response.ok) {
+                        this.transcriptText.textContent = data.transcript;
+                        this.voiceStatus.textContent = '✅ Transcription complete!';
+                        if (data.transcript.trim().length > 0) this.useTranscriptBtn.disabled = false;
+                    } else throw new Error(data.error || 'Transcription API failed');
+                } catch (error) {
+                    console.error("Fetch error details:", error);
+                    this.transcriptText.textContent = 'Failed: ' + error.message;
+                    this.voiceStatus.textContent = '❌ Failed to transcribe.';
+                    this.showNotification('Error: ' + error.message);
+                }
+            }
+
+            animateVoiceBars(active) {
+                const bars = document.querySelectorAll('.voice-bars .bar');
+                if (active) { this.barInterval = setInterval(() => { bars.forEach(b => { b.style.height = (Math.random() * 28 + 8) + 'px'; }); }, 150); }
+                else { clearInterval(this.barInterval); bars.forEach(b => b.style.height = '10px'); }
+            }
+
+            useTranscript() {
+                const joke = this.transcriptText.textContent.trim();
+                if (joke && joke.length > 2) { this.jokeInput.value = joke; this.switchTab('text'); this.updateCharCount(); this.showNotification('🎤 Loaded!'); this.jokeInput.focus(); }
+                else this.showNotification('❌ No valid speech detected.');
+            }
+
+            loadBattery() { const s = localStorage.getItem('jokebot_battery'); this.batteryLevel = s !== null ? parseInt(s) : 100; if (s === null) this.saveBattery(); }
+            saveBattery() { localStorage.setItem('jokebot_battery', this.batteryLevel.toString()); }
+
+            updateBatteryBasedOnScore(score) {
+                if (this.batteryLevel <= 0) { this.showNotification('🔋 Battery empty!'); return false; }
+                const old = this.batteryLevel; let change = 0;
+                if (score >= 90) { change = 20; this.batteryStatus.textContent = '⚡ LEGENDARY! +20%!'; }
+                else if (score >= 80) { change = 15; this.batteryStatus.textContent = '🤩 EXCELLENT! +15%!'; }
+                else if (score >= 70) { change = 10; this.batteryStatus.textContent = '😄 GREAT! +10%!'; }
+                else if (score >= 60) { change = 5; this.batteryStatus.textContent = '🙂 GOOD! +5%!'; }
+                else if (score >= 50) { change = 0; this.batteryStatus.textContent = '😐 AVERAGE. No change.'; }
+                else if (score >= 40) { change = -5; this.batteryStatus.textContent = '😕 WEAK. -5%!'; }
+                else if (score >= 30) { change = -10; this.batteryStatus.textContent = '😬 POOR. -10%!'; }
+                else if (score >= 20) { change = -15; this.batteryStatus.textContent = '💀 BAD! -15%!'; }
+                else { change = -20; this.batteryStatus.textContent = '🚫 TERRIBLE! -20%!'; }
+                this.batteryLevel = Math.max(0, Math.min(100, this.batteryLevel + change));
+                this.saveBattery(); this.updateBatteryDisplay(); this.animateBatteryChange(old, this.batteryLevel);
+                if (change > 0) this.showNotification(`🔋 +${change}%`);
+                else if (change < 0) this.showNotification(`🔋 ${change}%`);
+                return true;
+            }
+
+            updateBatteryDisplay() {
+                this.batteryFill.style.width = `${this.batteryLevel}%`;
+                this.batteryPercent.textContent = `${this.batteryLevel}%`;
+                if (this.batteryLevel >= 70) { this.batteryFill.style.background = 'linear-gradient(90deg,#10b981,#22c55e)'; this.batteryPercent.style.color = '#10b981'; this.batteryPercent.style.textShadow = '0 0 14px rgba(16,185,129,.6)'; }
+                else if (this.batteryLevel >= 30) { this.batteryFill.style.background = 'linear-gradient(90deg,#f59e0b,#fbbf24)'; this.batteryPercent.style.color = '#f59e0b'; this.batteryPercent.style.textShadow = '0 0 14px rgba(245,158,11,.6)'; }
+                else { this.batteryFill.style.background = 'linear-gradient(90deg,#ef4444,#dc2626)'; this.batteryPercent.style.color = '#ef4444'; this.batteryPercent.style.textShadow = '0 0 14px rgba(239,68,68,.6)'; }
+                this.evaluateBtn.disabled = this.batteryLevel <= 0;
+                this.evaluateBtn.innerHTML = this.batteryLevel <= 0 ? '<i class="fas fa-battery-empty"></i> BATTERY EMPTY' : '<i class="fas fa-brain"></i> Evaluate Joke';
+            }
+
+            animateBatteryChange(old, nw) {
+                this.batteryFill.style.transition = 'none'; this.batteryFill.style.width = `${old}%`;
+                this.batteryFill.offsetHeight;
+                setTimeout(() => { this.batteryFill.style.transition = 'width .85s cubic-bezier(.34,1.56,.64,1)'; this.batteryFill.style.width = `${nw}%`; }, 10);
+            }
+
+            resetBattery() {
+                if (confirm('Reset battery to 100%?')) {
+                    this.batteryLevel = 100; this.updateBatteryDisplay(); this.saveBattery();
+                    this.batteryStatus.textContent = 'Battery reset!'; this.showNotification('🔋 Reset complete!');
+                }
+            }
+
+            async evaluateJoke() {
+                const joke = this.jokeInput.value.trim();
+                if (!joke) { this.showNotification('Enter a joke first!'); return; }
+                if (joke.split(' ').length < 3) { this.showNotification('3+ words minimum!'); return; }
+                if (this.batteryLevel <= 0) { this.showNotification('Battery empty!'); return; }
+                this.currentJoke = joke;
+                this.evaluateBtn.disabled = true;
+                const orig = this.evaluateBtn.innerHTML;
+                this.evaluateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Evaluating...';
+                try {
+                    let result;
+                    try {
+                        const res = await fetch('http://127.0.0.1:5000/evaluate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ joke }) });
+                        if (res.ok) result = await res.json(); else throw new Error();
+                    } catch { result = this.evaluateLocally(joke); }
+                    this.showBotResponse(result);
+                    this.updateBatteryBasedOnScore(result.quality_score);
+                    this.showEvaluationModal(result);
+                    this.jokeInput.value = ''; this.updateCharCount();
+                } catch { this.showNotification('Evaluation failed.'); }
+                finally { this.evaluateBtn.disabled = false; this.evaluateBtn.innerHTML = orig; }
+            }
+
+            // FIX: No random noise — deterministic score
+            evaluateLocally(joke) {
+                let score = 50;
+                const words = joke.split(' ');
+                if (joke.includes('?') && joke.toLowerCase().includes('because')) score += 20;
+                if (joke.includes('?') && joke.includes('!')) score += 15;
+                if (this.detectPun(joke)) score += 15;
+                if (words.length > 5 && words.length < 30) score += 10;
+                // Removed: score += (Math.random() * 20 - 10);
+                score = Math.max(0, Math.min(100, Math.round(score)));
+                const feedback = score >= 80 ? '😂 HILARIOUS!' : score >= 60 ? '😄 VERY GOOD!' : score >= 40 ? '🙂 DECENT!' : '😬 Needs work...';
+                return { quality_score: score, feedback, rating: this.getRating(score) };
+            }
+
+            detectPun(joke) { return ['bear','bare','son','sun','flower','flour','see','sea','knight','night'].some(w => joke.toLowerCase().includes(w)); }
+            getRating(score) { return score >= 80 ? 'EXCELLENT' : score >= 60 ? 'GOOD' : score >= 40 ? 'AVERAGE' : 'POOR'; }
+
+            showBotResponse(result) {
+                const score = result.quality_score;
+                this.responseText.innerHTML = `
+                    <div style="margin-bottom:8px"><span style="font-size:.78rem;color:var(--txt-dim);font-family:'Orbitron',monospace;letter-spacing:.1em">SCORE</span><br>
+                    <span style="font-size:2rem;font-weight:900;font-family:'Orbitron',monospace;color:${this.getScoreColor(score)};text-shadow:0 0 16px ${this.getScoreColor(score)}">${score}%</span></div>
+                    <div style="font-size:1rem;font-weight:600;margin-bottom:10px">${result.feedback}</div>
+                    <div style="font-style:italic;color:var(--txt-mid);padding:10px 14px;background:var(--bg-surf);border-radius:8px;font-size:.84rem">"${this.currentJoke}"</div>`;
+                this.currentResponse = `${result.feedback} Score: ${score} percent.`;
+                this.speakBtn.disabled = false;
+                setTimeout(() => this.speakResponse(), 600);
+            }
+
+            getScoreColor(score) { return score >= 80 ? '#10b981' : score >= 60 ? '#00e5ff' : score >= 40 ? '#f59e0b' : '#ef4444'; }
+
+            speakResponse() {
+                if (!this.currentResponse || !('speechSynthesis' in window)) return;
+                this.speechSynth.cancel();
+                const u = new SpeechSynthesisUtterance(this.currentResponse); u.rate = 1.0;
+                if (this.modal.classList.contains('active')) { this.robotMouth.classList.add('speaking'); u.onend = () => this.robotMouth.classList.remove('speaking'); }
+                this.speechSynth.speak(u);
+            }
+
+            speakResponseWithMouth(mouth) {
+                if (!this.currentResponse || !('speechSynthesis' in window)) return;
+                this.speechSynth.cancel();
+                const u = new SpeechSynthesisUtterance(this.currentResponse); u.rate = 1.0;
+                mouth.classList.add('speaking'); u.onend = () => mouth.classList.remove('speaking');
+                this.speechSynth.speak(u);
+            }
+
+            showEvaluationModal(result) {
+                const score = result.quality_score, color = this.getScoreColor(score);
+                const robot = document.getElementById('cssRobot');
+                robot.querySelectorAll('.robot-head,.robot-body,.robot-neck,.robot-leg').forEach(el => { el.style.borderColor = color; el.style.boxShadow = `0 0 14px ${color}55`; });
+                robot.querySelectorAll('.robot-eye').forEach(el => { el.style.borderColor = color; el.style.boxShadow = `0 0 8px ${color}`; });
+                this.robotScoreBadge.style.color = color;
+                this.robotScoreBadge.style.borderColor = color;
+                this.robotScoreBadge.style.boxShadow = `0 0 16px ${color}80`;
+                this.robotScoreBadge.textContent = score + '%';
+                this.robotScoreBadge.style.animation = 'none';
+                this.robotScoreBadge.offsetHeight;
+                this.robotScoreBadge.style.opacity = '0';
+                this.robotScoreBadge.style.animation = 'badgeIn .5s cubic-bezier(.34,1.56,.64,1) .3s forwards';
+                this.modalResult.innerHTML = `
+                    <div class="score-display" style="color:${color}">${score}%</div>
+                    <div class="feedback-text">${result.feedback}</div>
+                    <div class="joke-quote">"${this.currentJoke}"</div>`;
+                this.modal.classList.add('active');
+            }
+
+            switchTab(tab) {
+                if (tab === 'text') { this.textTab.classList.add('active'); this.voiceTab.classList.remove('active'); this.textSection.classList.add('active'); this.voiceSection.classList.remove('active'); this.jokeInput.focus(); }
+                else { this.textTab.classList.remove('active'); this.voiceTab.classList.add('active'); this.textSection.classList.remove('active'); this.voiceSection.classList.add('active'); }
+            }
+
+            updateCharCount() {
+                const c = this.jokeInput.value.length; this.charCount.textContent = `${c} chars`;
+                this.charCount.style.color = c < 20 ? '#ef4444' : c < 50 ? '#f59e0b' : '#10b981';
+            }
+
+            showNotification(msg) {
+                document.querySelector('.custom-notification')?.remove();
+                const n = document.createElement('div'); n.className = 'custom-notification';
+                n.innerHTML = `<div style="display:flex;align-items:center;gap:10px"><i class="fas fa-info-circle" style="color:var(--cyan)"></i><span>${msg}</span></div>`;
+                document.body.appendChild(n); setTimeout(() => n.remove(), 3000);
+            }
+
+            showHelp() {
+                alert(`🤖 JOKEBOT HELP\n\n⌨️ TEXT: Type joke → click Evaluate or Ctrl+Enter\n🎤 VOICE: Record → Stop → Wait for AI → Use This Joke\n🔋 BATTERY: Good jokes charge, bad jokes drain\n🤖 ROBOT: Appears after evaluation with score\n💬 CHATBOT: Bottom-right chat bubble`);
+            }
+        }
+
+        window.jokeBotInstance = new JokeBot();
+    </script>
+    
+    <script>
+        const CHATBOT_KNOWLEDGE = {
+            greetings: ["hi", "hello", "hey"], farewells: ["bye", "goodbye"],
+            creators: [
+                { keywords: ["make u", "creators", "creator", "who made", "who created", "build it", "build u","build you", "developer"], response: "This project was created by:\n\nAli — AI/ML Engineer\n• Built the joke evaluation model\n• Designed the scoring & battery logic\n\nNeha — Frontend Developer\n• Designed the UI & chatbot experience\n• Made everything interactive and fun\n\nAsk me about jokes, scoring, battery, or voice features 😊" },
+                { keywords: ["neha", "ali", "neha and ali"], response: "Yes! Ali and Neha are the creators.\n\nAli: AI/ML Engineer - Built the joke evaluation model\nNeha: Frontend Developer - Designed the user interface\n\nGreat teamwork for a fun project!" }
+            ],
+            jokes: [
+                { keywords: ["how", "work", "does work"], response: "How JokeBot works:\n\n1. You tell me a joke\n2. I analyze it using AI\n3. I give you a score and feedback\n4. Battery charges/drains based on score\n\nSimple and fun!" },
+                { keywords: ["score", "scoring", "rate"], response: "Scoring system:\n\n• 90-100%: LEGENDARY\n• 80-89%: EXCELLENT\n• 70-79%: GREAT\n• 60-69%: GOOD\n• 50-59%: AVERAGE\n• Below 50%: Needs work\n\nEach joke gets a detailed score." },
+                { keywords: ["battery", "energy"], response: "Battery system:\n\nGood jokes: +(10-20)%\nAverage jokes: No change\nBad jokes: -(10-20)%\n\nKeep telling funny jokes to charge up!" },
+                { keywords: ["example", "examples", "sample", "samples"], response: "Example jokes:\n\n1. Why don't scientists trust atoms? Because they make up everything!\n2. What do you call a fake noodle? An impasta!\n3. Why did the scarecrow win an award? He was outstanding in his field!" },
+                { keywords: ["voice", "speak", "audio"], response: "Voice features:\n\n• Record jokes by speaking\n• AI transcribes your audio perfectly\n• AI speaks feedback aloud\n• Works right in the browser!" }
+            ],
+            ai: [
+                { keywords: ["ai", "artificial intelligence"], response: "AI Technology:\n\n• Uses RoBERTa model\n• Trained on 60,000+ jokes\n• Real-time evaluation\n• 70 percent accuracy\n• Uses Gemini 2.5 Flash for voice\n• Runs locally" },
+                { keywords: ["model", "roberta"], response: "Model details:\n\n• Fine-tuned transformer\n• Processes jokes instantly\n• Provides accurate scores\n• Self-contained system" }
+            ],
+            help: [
+                { keywords: ["help", "support", "trouble"], response: "Help topics:\n\n• How to evaluate jokes\n• Understanding scores\n• Battery management\n• Voice features\n\nWhat do you need help with?" },
+                { keywords: ["reset", "restart", "clear"], response: "Reset options:\n\n• Battery reset: Click reset button\n• Chat reset: Click refresh button in chat\n• Full reset: Refresh the page" }
+            ]
+        };
+
+        // Chatbot init waits for appReady too
+        document.addEventListener('appReady', initChatbot);
+
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const chatbotSend = document.getElementById('chatbotSend');
+        const chatbotCloseBtn = document.getElementById('chatbotCloseBtn');
+        const chatbotRefreshBtn = document.getElementById('chatbotRefreshBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const quickQuestionBtns = document.querySelectorAll('.quick-question-btn');
+
+        function randomGreeting() { return ["Hey! 👋 Nice to see you!", "Hello there 😄 Ready for some jokes?", "Hi! 🤖 I'm listening!", "Hey! Got a joke for me?"][Math.floor(Math.random() * 4)]; }
+
+        function initChatbot() {
+            chatbotToggle.addEventListener('click', openChatbot);
+            chatbotCloseBtn.addEventListener('click', closeChatbot);
+            chatbotRefreshBtn.addEventListener('click', clearChat);
+            chatbotSend.addEventListener('click', sendMessage);
+            chatbotInput.addEventListener('keypress', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+            quickQuestionBtns.forEach(btn => btn.addEventListener('click', () => { chatbotInput.value = btn.getAttribute('data-question'); sendMessage(); }));
+            setTimeout(() => addMessage('bot', randomGreeting() + "\n\nThis project was created by Ali and Neha. Ask me about jokes, scoring, battery, or voice features 😊"), 1000);
+        }
+
+        function openChatbot() { chatbotContainer.classList.add('active'); chatbotToggle.style.display = 'none'; chatbotInput.focus(); }
+        function closeChatbot() { chatbotContainer.classList.remove('active'); chatbotToggle.style.display = 'flex'; }
+        function clearChat() { chatbotMessages.innerHTML = ''; addMessage('bot', 'Chat cleared. Ask me anything! 💬'); }
+        function addMessage(sender, text) { const d = document.createElement('div'); d.className = `chatbot-message ${sender}-message`; d.textContent = text; chatbotMessages.appendChild(d); chatbotMessages.scrollTop = chatbotMessages.scrollHeight; return d; }
+        function showTyping() { typingIndicator.style.display = 'block'; chatbotMessages.scrollTop = chatbotMessages.scrollHeight; }
+        function hideTyping() { typingIndicator.style.display = 'none'; }
+        async function typeEffect(el, text) { el.textContent = ''; for (let i = 0; i < text.length; i++) { el.textContent += text[i]; chatbotMessages.scrollTop = chatbotMessages.scrollHeight; await new Promise(r => setTimeout(r, ['.','!','?','\n'].includes(text[i]) ? 50 : 20)); } }
+
+        function processMessage(input) {
+            const msg = input.toLowerCase().trim();
+            if (CHATBOT_KNOWLEDGE.greetings.some(g => msg === g || msg.startsWith(g))) return randomGreeting() + "\n\nThis project was created by Ali and Neha. Ask me about jokes, scoring, battery, or voice features 😊";
+            if (CHATBOT_KNOWLEDGE.farewells.some(f => msg.includes(f))) return "Goodbye! 😊 Keep telling funny jokes!";
+            if (msg.includes("how are you")) return "I'm doing great! 😄 Fully charged and ready to hear some jokes!";
+            if (msg.includes("what can you do")) return "I can do quite a few things 🤖✨\n• Evaluate jokes with AI\n• Give funny feedback & scores\n• Manage the joke battery 🔋\n• Listen & speak using voice 🎤\n• Tell you about the creators\n\nTry asking me something!";
+            if (msg.includes("thank")) return "You're welcome! 😄 Keep the jokes coming!";
+            for (const item of [...CHATBOT_KNOWLEDGE.creators, ...CHATBOT_KNOWLEDGE.jokes, ...CHATBOT_KNOWLEDGE.ai, ...CHATBOT_KNOWLEDGE.help])
+                if (item.keywords.some(k => msg.includes(k))) return item.response;
+            if (msg.includes('battery') && (msg.includes('how') || msg.includes('what') || msg.includes('current')))
+                return `Current battery: ${document.getElementById('batteryPercent').textContent}\nStatus: ${document.getElementById('batteryStatus').textContent}\n\nGood jokes charge it, bad jokes drain it!`;
+            return "Hmm 🤔 I'm not sure about that.\n\nYou can ask me about:\n• Joke scoring 🎯\n• Battery system 🔋\n• Voice features 🎤\n• Creators 👥\n\nOr just say hi! 👋";
+        }
+
+        async function sendMessage() {
+            const input = chatbotInput.value.trim(); if (!input) return;
+            addMessage('user', input); chatbotInput.value = ''; chatbotSend.disabled = true; chatbotInput.disabled = true;
+            showTyping(); await new Promise(r => setTimeout(r, 800));
+            const response = processMessage(input); hideTyping();
+            const botMsg = addMessage('bot', ''); await typeEffect(botMsg, response);
+            chatbotSend.disabled = false; chatbotInput.disabled = false; chatbotInput.focus();
+        }
+
+        window.JokeAIChatbot = { open: openChatbot, close: closeChatbot, clear: clearChat };
+    </script>
+
+</body>
+</html>
